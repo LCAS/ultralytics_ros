@@ -28,6 +28,8 @@ find_package(PCL REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/YoloResult.msg"
+  "msg/YoloResultDistance.msg"
+  "msg/DistanceArray.msg"
   DEPENDENCIES
   sensor_msgs
   std_msgs
@@ -64,6 +66,7 @@ install(TARGETS
 
 install(PROGRAMS
   script/tracker_node.py
+  script/tracker_depth.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
