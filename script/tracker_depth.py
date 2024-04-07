@@ -73,9 +73,13 @@ class TrackerNode(Node):
         result_image_topic = (
             self.get_parameter("result_image_topic").get_parameter_value().string_value
         )
-
-        self.image_sub = Subscriber(self, Image, input_topic)
-        self.depth_sub = Subscriber(self, Image, input_depth_topic)
+        qos_policy = rclpy.qos.QoSProfile(reliability=rclpy.qos.ReliabilityPolicy.BEST_EFFORT,
+                                          history=rclpy.qos.HistoryPolicy.KEEP_LAST,
+                                          depth=1)
+        # self.sub = self.create_subscription(Image, topic,
+                                    # self.subscriber_callback, qos_profile=qos_policy)
+        self.image_sub = Subscriber(self, Image, input_topic, qos_profile=qos_policy)
+        self.depth_sub = Subscriber(self, Image, input_depth_topic, qos_profile=qos_policy)
         
         self.ts = ApproximateTimeSynchronizer([self.image_sub, self.depth_sub], queue_size=10, slop=0.1)
         self.ts.registerCallback(self.image_callback)
